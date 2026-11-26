@@ -17,3 +17,4 @@ incoherence = { git = "https://github.com/timjdavey/incoherence", rev = "ba8e920
 
 [tool.ruff]
 line-length = 100
+src = ["toy"]  # so `from main import` counts as first party
