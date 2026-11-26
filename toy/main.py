@@ -44,6 +44,8 @@ def hot_mess(p):
 
 def shapes(rng):
     """Return centred directions in log space, one row per sample, for each ensemble."""
+    # The camps split the samples evenly into two and five groups.
+    assert SAMPLES % 10 == 0, "SAMPLES must divide by 2 and 5"
 
     def jitter():
         return 0.06 * rng.standard_normal((SAMPLES, OPTIONS))
@@ -79,7 +81,9 @@ def build(shape, variance=VARIANCE):
             lo = scale
         else:
             hi = scale
-    return softmax(MU + scale * shape)
+    p = softmax(MU + scale * shape)
+    assert np.isclose(hot_mess(p)[1], variance), f"variance {variance} not reached"
+    return p
 
 
 def measure(p):
@@ -126,4 +130,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sweep", action="store_true", help="repeat over seeds and variances")
     args = parser.parse_args()
-    sweep() if args.sweep else figure_table()
+    if args.sweep:
+        sweep()
+    else:
+        figure_table()

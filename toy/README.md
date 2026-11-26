@@ -1,13 +1,14 @@
 # The toy
 
-Three toy sets of samples that have a consistent Hot Mess error incoherence but behave differently. We look at how Cohesion acts.
+Three toy sets of samples that share the same Hot Mess error incoherence but behave differently. We look at how Cohesion acts.
 
 ## The setup
 
 - **One multiple choice question is asked 30 times.** It has four options, and A is correct.
 - **Each answer is four probabilities, one per option.** For example "A 60%, B 30%, C 8%, D 2%". We call each of these a sample.
 - **The [Hot Mess paper](https://arxiv.org/abs/2601.23045) splits a model's error into two parts.** Bias is how far the average sample is from the right answer. Variance is how far the samples are from their own average.
-- **Error incoherence is the share of the error that is variance.** For one question it is variance ÷ (bias + variance). A high score means the model is wrong mostly because it disagrees with itself.
+- **Error incoherence is the share of the error that is variance.** It is variance ÷ (bias + variance). The paper labels the bias term "Bias²", but in the KL form it is the KL itself, so nothing is squared. A high score means the model is wrong mostly because it disagrees with itself.
+- **The paper sums over many questions.** Its error incoherence is total variance ÷ total error across a question set. With one question, as here, that is the same ratio.
 
 These are not real results from a model. The distributions were picked specifically to hold error incoherence steady while altering Cohesion.
 
@@ -24,7 +25,7 @@ Each panel is one set of 30 samples, with one row per sample. The colours show h
 | Two camps | 0.80 | 0.80 | 0.50 | 0.41 | 0.77 |
 
 - **The three Hot Mess numbers are the same in every row.** We built the samples that way, see [how the toy is built](#how-the-toy-is-built).
-- **The behaviour is not the same.** On the left, no two samples agree. On the right, every sample is one of two answers, "about 90% on A" or "about 90% on B".
+- **The behaviour is not the same.** On the left, no two samples agree. On the right, every sample is one of two answers, "mostly A" (about 89%) or "mostly B" (about 85%).
 - **Cohesion rises as the samples form fewer and clearer camps.** It reads 0.03, then 0.27, then 0.77.
 - **Two camps is not a mess.** It looks like two steady behaviours that the model switches between. That is a different problem from answers with no pattern at all.
 
@@ -49,14 +50,14 @@ You need [uv](https://docs.astral.sh/uv/). It installs everything else the first
 
 ## How the toy is built
 
-- **Bias matches because every set has the same average sample.** The samples in each set are spread around one centre, so their geometric mean, the average the paper uses, is always "A 45%, B 35%, C 12%, D 8%".
+- **Bias matches because every set has the same mean prediction.** The paper's mean prediction is the normalised geometric mean of the samples, not the plain average. The samples in each set are spread around one centre in log space, so every set has a mean prediction of "A 45%, B 35%, C 12%, D 8%". The plain averages differ, for example about 47%, 44%, 6% and 4% for two camps.
 - **Variance matches because we scale the spread.** Each set is stretched or squeezed until its variance is 0.80.
 - **Only the shape of the spread differs.** One set is a cloud, one has five camps and one has two.
 - **The formulas are the paper's KL form.** They are in `hot_mess()` in [`main.py`](main.py), and its docstring gives the detail.
 
 ## Does it hold at other scores?
 
-Yes, with one limit. This table shows Cohesion at five levels of error incoherence. Each cell is the mean over 20 seeds. The figure uses one seed, so its numbers can differ a little.
+Yes, with one limit. This table shows the mean Cohesion over 20 seeds at five levels of error incoherence. "Own mix" is the cloud version. The figure uses one seed, so its numbers can differ a little.
 
 | Error incoherence | Own mix | Five camps | Two camps |
 |---|---|---|---|
@@ -68,7 +69,8 @@ Yes, with one limit. This table shows Cohesion at five levels of error incoheren
 
 - **The order holds at every level.** Two camps always scores highest and own mix always scores lowest.
 - **The gap is wide from 0.39 upwards.** Own mix reads 0.10 or less, and two camps reads 0.77 or more.
-- **The gap narrows when variance is small.** At an error incoherence of 0.11, own mix reads 0.65 against 0.83 for two camps. With little disagreement there is little shape to measure.
+- **The gap narrows when variance is small.** At an error incoherence of 0.11, own mix reads 0.65 against 0.83 for two camps. With little disagreement every pair of samples is close, so the pairwise gaps bunch near zero whatever the shape.
+- **The last row is partly the certainty effect.** At 0.65, about 40% of the two-camp and five-camp samples put over 95% on one option. That pushes Cohesion up, as described under Limitations, and is likely why five camps rises from 0.27 to 0.37.
 
 ## Limitations
 
