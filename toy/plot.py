@@ -32,7 +32,7 @@ def sort_rows(p, key):
 
 def draw_panel(ax, title, p):
     """Draw one ensemble as stacked bars, one row per sample, and return its measures."""
-    bias, variance, error_incoherence, incoherence, cohesion = measure(p)
+    bias, variance, error_incoherence, _, cohesion = measure(p)
     rows = np.arange(SAMPLES)[::-1]
     left = np.zeros(SAMPLES)
     for option in range(OPTIONS):
@@ -59,7 +59,7 @@ def draw_panel(ax, title, p):
         transform=ax.transAxes, color=MUTED, fontsize=10.5,
     )  # fmt: skip
     ax.text(
-        0, 1.03, f"Incoherence {incoherence:.2f}   Cohesion {cohesion:.2f}",
+        0, 1.03, f"Cohesion {cohesion:.2f}",
         transform=ax.transAxes, color=INK, fontsize=10.5,
     )  # fmt: skip
     return bias, variance
