@@ -49,16 +49,7 @@ def shapes(rng):
         return 0.06 * rng.standard_normal((SAMPLES, OPTIONS))
 
     two = np.repeat([[1, -1, 0, 0], [-1, 1, 0, 0]], SAMPLES // 2, axis=0) + jitter()
-    three = (
-        np.repeat(
-            [[1.2, -0.6, -0.6, 0], [-0.6, 1.2, -0.6, 0], [-0.6, -0.6, 1.2, 0]],
-            SAMPLES // 3,
-            axis=0,
-        )
-        + jitter()
-    )
     cloud = rng.standard_normal((SAMPLES, OPTIONS))
-    line = np.outer(np.linspace(-1, 1, SAMPLES), [1, -1, 0, 0]) + jitter()
     # Four camps each favour one option and a fifth splits between A and B,
     # since five camps can't each favour a different one of four options.
     five = (
@@ -75,26 +66,20 @@ def shapes(rng):
         )
         + jitter()
     )
-    out = {
-        "own mix (cloud)": cloud,
-        "own mix (A to B line)": line,
-        "two camps": two,
-        "three camps": three,
-        "five camps": five,
-    }
+    out = {"own mix (cloud)": cloud, "two camps": two, "five camps": five}
     return {name: z - z.mean(0) for name, z in out.items()}
 
 
-def build(shape, mu=MU, variance=VARIANCE):
+def build(shape, variance=VARIANCE):
     """Scale `shape` by bisection until the ensemble has the target KL variance."""
     lo, hi = 0.0, 60.0
     for _ in range(80):
         scale = (lo + hi) / 2
-        if hot_mess(softmax(mu + scale * shape))[1] < variance:
+        if hot_mess(softmax(MU + scale * shape))[1] < variance:
             lo = scale
         else:
             hi = scale
-    return softmax(mu + scale * shape)
+    return softmax(MU + scale * shape)
 
 
 def measure(p):
@@ -124,19 +109,16 @@ def sweep(seeds=20, variances=(0.1, 0.25, 0.5, 0.8, 1.5)):
         rows = {}
         for seed in range(seeds):
             for name, z in shapes(np.random.default_rng(seed)).items():
-                p = build(z, variance=variance)
-                certain = (p.max(1) > 0.95).mean()  # share of samples near certain
-                rows.setdefault(name, []).append([*measure(p), certain])
+                rows.setdefault(name, []).append(measure(build(z, variance=variance)))
         print(f"\ntarget KL variance {variance}")
         print(
             f"{'ensemble':22} {'bias':>6} {'variance':>9} {'error incoh.':>13}"
-            f" {'incoherence':>12} {'cohesion':>14} {'near certain':>13}"
+            f" {'incoherence':>12} {'cohesion':>9}"
         )
         for name, values in rows.items():
-            m, sd = np.mean(values, 0), np.std(values, 0)
+            m = np.mean(values, 0)
             print(
-                f"{name:22} {m[0]:6.2f} {m[1]:9.2f} {m[2]:13.2f}"
-                f" {m[3]:12.2f} {m[4]:8.2f} ±{sd[4]:.2f} {m[5]:13.2f}"
+                f"{name:22} {m[0]:6.2f} {m[1]:9.2f} {m[2]:13.2f} {m[3]:12.2f} {m[4]:9.2f}"
             )
 
 
