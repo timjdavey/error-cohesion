@@ -3,7 +3,8 @@
 One question with four options, sampled 30 times. Each sample is a probability
 vector over the options, and option A is correct.
 
-The Hot Mess measures follow the paper's KL form. The mean prediction is the
+The Hot Mess measures follow the paper's KL form, and live in `measures.py` at
+the repo root so the real data uses the same code. The mean prediction is the
 normalised geometric mean of the samples, bias is KL(truth || mean) and variance
 is the average KL(mean || sample). Error incoherence is variance / (bias + variance).
 
@@ -17,29 +18,19 @@ Run `uv run toy/main.py` for the three ensembles in the figure, or
 """
 
 import argparse
+import sys
+from pathlib import Path
 
-import incoherence as ic
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from measures import hot_mess, measure, softmax
 
 TRUTH = 0  # option A
 OPTIONS = 4
 SAMPLES = 30
 MU = np.log([0.45, 0.35, 0.12, 0.08])  # log of the shared mean prediction
 VARIANCE = 0.8  # KL variance used in the figure
-
-
-def softmax(x):
-    """Turn rows of log weights into probability vectors."""
-    e = np.exp(x - x.max(-1, keepdims=True))
-    return e / e.sum(-1, keepdims=True)
-
-
-def hot_mess(p):
-    """Return bias, variance and error incoherence for samples `p` (samples x options)."""
-    mean = softmax(np.log(p).mean(0))
-    bias = -np.log(mean[TRUTH])
-    variance = (mean * (np.log(mean) - np.log(p))).sum(1).mean()
-    return bias, variance, variance / (bias + variance)
 
 
 def shapes(rng):
@@ -77,19 +68,13 @@ def build(shape, variance=VARIANCE):
     lo, hi = 0.0, 60.0
     for _ in range(80):
         scale = (lo + hi) / 2
-        if hot_mess(softmax(MU + scale * shape))[1] < variance:
+        if hot_mess(softmax(MU + scale * shape), TRUTH)[1] < variance:
             lo = scale
         else:
             hi = scale
     p = softmax(MU + scale * shape)
-    assert np.isclose(hot_mess(p)[1], variance), f"variance {variance} not reached"
+    assert np.isclose(hot_mess(p, TRUTH)[1], variance), f"variance {variance} not reached"
     return p
-
-
-def measure(p):
-    """Return the Hot Mess measures, then Incoherence and Cohesion, for samples `p`."""
-    result = ic.measure_counts(p)  # each sample is one trial
-    return (*hot_mess(p), result.incoherence, result.cohesion)
 
 
 def figure_table():
@@ -100,7 +85,7 @@ def figure_table():
         f" {'incoherence':>12} {'cohesion':>9}"
     )
     for name in ("own mix (cloud)", "five camps", "two camps"):
-        bias, variance, error_incoherence, incoherence, cohesion = measure(build(z[name]))
+        bias, variance, error_incoherence, incoherence, cohesion = measure(build(z[name]), TRUTH)
         print(
             f"{name:18} {bias:6.2f} {variance:9.2f} {error_incoherence:13.2f}"
             f" {incoherence:12.2f} {cohesion:9.2f}"
@@ -113,7 +98,7 @@ def sweep(seeds=20, variances=(0.1, 0.25, 0.5, 0.8, 1.5)):
         rows = {}
         for seed in range(seeds):
             for name, z in shapes(np.random.default_rng(seed)).items():
-                rows.setdefault(name, []).append(measure(build(z, variance=variance)))
+                rows.setdefault(name, []).append(measure(build(z, variance=variance), TRUTH))
         print(f"\ntarget KL variance {variance}")
         print(
             f"{'ensemble':22} {'bias':>6} {'variance':>9} {'error incoh.':>13}"

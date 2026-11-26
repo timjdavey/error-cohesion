@@ -1,9 +1,10 @@
 [project]
 name = "error-cohesion"
 version = "0.1.0"
-description = "Cohesion and Incoherence in the Hot Mess setup: toy examples"
+description = "Cohesion and Incoherence in the Hot Mess setup: toy examples and the paper's own data"
 requires-python = ">=3.12"
 dependencies = [
+    "huggingface-hub>=2.4.0",
     "incoherence",
     "matplotlib>=3.9",
     "numpy>=2.0",
@@ -19,5 +20,5 @@ incoherence = { git = "https://github.com/timjdavey/incoherence", rev = "ba8e920
 line-length = 100
 
 [tool.ruff.lint.isort]
-# The plot scripts import their sibling main.py.
-known-first-party = ["main"]
+# Scripts import their siblings by name, and the toy and real data share measures.py.
+known-first-party = ["load", "main", "measures"]

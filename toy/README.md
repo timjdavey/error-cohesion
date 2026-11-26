@@ -53,7 +53,7 @@ You need [uv](https://docs.astral.sh/uv/). It installs everything else the first
 - **Bias matches because every set has the same mean prediction.** The paper's mean prediction is the normalised geometric mean of the samples, not the plain average. The samples in each set are spread around one centre in log space, so every set has a mean prediction of "A 45%, B 35%, C 12%, D 8%". The plain averages differ, for example about 47%, 44%, 6% and 4% for two camps.
 - **Variance matches because we scale the spread.** Each set is stretched or squeezed until its variance is 0.80.
 - **Only the shape of the spread differs.** One set is a cloud, one has five camps and one has two.
-- **The formulas are the paper's KL form.** They are in `hot_mess()` in [`main.py`](main.py), and its docstring gives the detail.
+- **The formulas are the paper's KL form.** They are in `hot_mess()` in [`measures.py`](../measures.py), and its docstring gives the detail.
 
 ## Does it hold at other scores?
 

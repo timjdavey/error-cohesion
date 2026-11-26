@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Downloaded Hot Mess data is too large to commit
+data/
