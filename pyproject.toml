@@ -1,0 +1,19 @@
+[project]
+name = "error-cohesion"
+version = "0.1.0"
+description = "Cohesion in the Hot Mess setup: a toy example"
+requires-python = ">=3.12"
+dependencies = [
+    "incoherence",
+    "matplotlib>=3.9",
+    "numpy>=2.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+incoherence = { git = "https://github.com/timjdavey/incoherence", rev = "ba8e920101b0896fc2dbc4303385eb6fd113ff9c" }
+
+[tool.ruff]
+line-length = 100
