@@ -1,9 +1,10 @@
 [project]
 name = "error-cohesion"
 version = "0.1.0"
-description = "Cohesion in the Hot Mess setup: a toy example"
+description = "Cohesion in the Hot Mess setup: a toy example and the paper's own data"
 requires-python = ">=3.12"
 dependencies = [
+    "huggingface-hub>=2.4.0",
     "incoherence",
     "matplotlib>=3.9",
     "numpy>=2.0",

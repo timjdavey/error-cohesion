@@ -10,7 +10,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-
 from main import OPTIONS, SAMPLES, build, measure, shapes
 
 SURFACE, INK, MUTED = "#fcfcfb", "#0b0b0b", "#52514e"
@@ -89,7 +88,6 @@ def main():
         color=MUTED, fontsize=11,
     )  # fmt: skip
     fig.subplots_adjust(left=0.05, right=0.98, top=0.77, bottom=0.15, wspace=0.1)
-    OUT.parent.mkdir(exist_ok=True)
     fig.savefig(OUT, dpi=170, facecolor=SURFACE)
     print(OUT)
 
