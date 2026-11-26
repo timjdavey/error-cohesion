@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
 from main import OPTIONS, SAMPLES, build, measure, shapes
 
 SURFACE, INK, MUTED = "#fcfcfb", "#0b0b0b", "#52514e"
@@ -68,8 +69,12 @@ def main():
     """Draw the three ensembles side by side and save the figure."""
     z = shapes(np.random.default_rng(0))
     fig, axes = plt.subplots(1, 3, figsize=(12, 6.6), sharey=True, facecolor=SURFACE)
-    for ax, (title, key) in zip(axes, PANELS):
-        bias, variance = draw_panel(ax, title, sort_rows(build(z[key]), key))
+    measures = [
+        draw_panel(ax, title, sort_rows(build(z[key]), key))
+        for ax, (title, key) in zip(axes, PANELS)
+    ]
+    bias, variance = measures[0]
+    assert np.allclose(measures, measures[0]), "panels should share bias and variance"
     axes[0].set_ylabel(f"{SAMPLES} samples, one row each", color=MUTED, fontsize=11)
     handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in COLOURS]
     fig.legend(
