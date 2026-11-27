@@ -21,7 +21,7 @@ COLOURS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]  # same as toy/plot.py
 OUT = Path(__file__).parent / "figure.png"
 
 #: Three questions with error incoherence between 0.5 and 0.57, picked from the
-#: 0.4 to 0.6 band as the lowest Cohesion, a middle one and one near the top.
+#: 0.4 to 0.6 band as the lowest Cohesion, one in the upper half and one at the top.
 EXAMPLES = [
     (81, "Four loose camps, mostly unsure"),
     (407, "Two camps, mostly certain"),

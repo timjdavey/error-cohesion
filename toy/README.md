@@ -21,17 +21,19 @@ Each panel is one set of 30 samples, with one row per sample. The colours show h
 | Samples | Bias | Variance | Error incoherence | Incoherence | Cohesion |
 |---|---|---|---|---|---|
 | Every sample has its own mix | 0.80 | 0.80 | 0.50 | 0.42 | 0.03 |
-| Five camps | 0.80 | 0.80 | 0.50 | 0.55 | 0.27 |
-| Two camps | 0.80 | 0.80 | 0.50 | 0.41 | 0.77 |
+| Five camps | 0.80 | 0.80 | 0.50 | 0.55 | 0.35 |
+| Two camps | 0.80 | 0.80 | 0.50 | 0.41 | 0.83 |
 
 - **The three Hot Mess numbers are the same in every row.** We built the samples that way, see [how the toy is built](#how-the-toy-is-built).
 - **The behaviour is not the same.** On the left, no two samples agree. On the right, every sample is one of two answers, "mostly A" (about 89%) or "mostly B" (about 85%).
-- **Cohesion rises as the samples form fewer and clearer camps.** It reads 0.03, then 0.27, then 0.77.
+- **Cohesion rises as the samples form fewer and clearer camps.** It reads 0.03, then 0.35, then 0.83.
 - **Two camps is not a mess.** It looks like two steady behaviours that the model switches between. That is a different problem from answers with no pattern at all.
 
 ## The two extra measures
 
 Both come from the [incoherence](https://github.com/timjdavey/incoherence) package. Both run from 0 to 1, and neither uses the correct answer as an input. Incoherence is not the same thing as error incoherence, see [how they differ](../compare/README.md).
+
+Cohesion uses the package default `k`, 8 for each sample, so 240 here and 320 for the 40 runs in [the real data](../real/README.md). The Cohesion paper fixed it at 100, which gives lower readings.
 
 | Measure | What it says | Paper |
 |---|---|---|
@@ -61,19 +63,19 @@ Yes, with one limit. This table shows the mean Cohesion over 20 seeds at five le
 
 | Error incoherence | Own mix | Five camps | Two camps |
 |---|---|---|---|
-| 0.11 | 0.65 | 0.73 | 0.83 |
-| 0.24 | 0.32 | 0.46 | 0.79 |
-| 0.39 | 0.10 | 0.30 | 0.77 |
-| 0.50 | 0.03 | 0.27 | 0.77 |
-| 0.65 | 0.00 | 0.37 | 0.81 |
+| 0.11 | 0.63 | 0.73 | 0.90 |
+| 0.24 | 0.32 | 0.50 | 0.86 |
+| 0.39 | 0.11 | 0.37 | 0.83 |
+| 0.50 | 0.03 | 0.35 | 0.84 |
+| 0.65 | 0.00 | 0.46 | 0.88 |
 
 - **The order holds at every level.** Two camps always scores highest and own mix always scores lowest.
-- **The gap is wide from 0.39 upwards.** Own mix reads 0.10 or less, and two camps reads 0.77 or more.
-- **The gap narrows when variance is small.** At an error incoherence of 0.11, own mix reads 0.65 against 0.83 for two camps. With little disagreement every pair of samples is close, so the pairwise gaps bunch near zero whatever the shape.
-- **The last row is partly the certainty effect.** At 0.65, about 40% of the two-camp and five-camp samples put over 95% on one option. That pushes Cohesion up, as described under Limitations, and is likely why five camps rises from 0.27 to 0.37.
+- **The gap is wide from 0.39 upwards.** Own mix reads 0.11 or less, and two camps reads 0.83 or more.
+- **The gap narrows when variance is small.** At an error incoherence of 0.11, own mix reads 0.63 against 0.90 for two camps. With little disagreement every pair of samples is close, so the pairwise gaps bunch near zero whatever the shape.
+- **The last row is partly the certainty effect.** At 0.65, about 40% of the two-camp and five-camp samples put over 95% on one option. That pushes Cohesion up, as described under Limitations, and is likely why five camps rises from 0.35 to 0.46.
 
 ## Limitations
 
 - **Nothing about real models.** Every sample is made up to prove a point about the measure.
-- **Nothing for answers that are fully certain.** If every sample puts 100% on one option, any two samples either match or fully differ. Cohesion then reads about 0.85 whether the answers use two options or all four.
+- **Nothing for answers that are fully certain.** If every sample puts 100% on one option, any two samples either match or fully differ. Cohesion then reads about 0.94 whether the answers use two options or all four.
 - **Nothing about the right answer.** Cohesion ignores which option is correct. A version that uses it is an open question. It's likely Cohesion stays a sister metric alongside incoherence and error incoherence.
