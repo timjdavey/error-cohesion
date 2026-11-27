@@ -14,7 +14,7 @@ dependencies = [
 package = false
 
 [tool.uv.sources]
-incoherence = { git = "https://github.com/timjdavey/incoherence", rev = "ba8e920101b0896fc2dbc4303385eb6fd113ff9c" }
+incoherence = { git = "https://github.com/timjdavey/incoherence", rev = "b3f6e2df242794bf50e9e087d1fedafc9f25e13f" }
 
 [tool.ruff]
 line-length = 100

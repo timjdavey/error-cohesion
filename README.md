@@ -14,6 +14,6 @@ I'd be interested to see how this affects the outcome of incoherence on longer t
 
 The same pattern shows up in the paper's own GPQA runs, see [the real data](real/README.md). And this might lead to better constructions of Cohesion.
 
-![Three panels of 40 runs each, from real GPQA questions. The first has four loose camps of soft answers and Cohesion 0.03. The second has two camps of mostly certain answers and Cohesion 0.46. The third has two camps of fully certain answers and Cohesion 0.84. All three have an error incoherence between 0.50 and 0.57.](real/figure.png)
+![Three panels of 40 runs each, from real GPQA questions. The first has four loose camps of soft answers and Cohesion 0.19. The second has two camps of mostly certain answers and Cohesion 0.76. The third has two camps of fully certain answers and Cohesion 0.95. All three have an error incoherence between 0.50 and 0.57.](real/figure.png)
 
 The paper's error incoherence also shares a name with [Incoherence](https://doi.org/10.3390/e26080683). They are built for different jobs, see [how they differ](compare/README.md).
