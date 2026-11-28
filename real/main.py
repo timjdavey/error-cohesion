@@ -1,4 +1,4 @@
-"""Cohesion on the Hot Mess paper's own GPQA runs.
+"""Cohesion on the Hot Mess paper's public GPQA runs.
 
 For each config, every question has about 40 samples, one per run, and each
 sample is four probabilities. We work out the paper's KL bias, variance and

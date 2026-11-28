@@ -7,7 +7,7 @@ Three toy sets of samples that share the same Hot Mess error incoherence but beh
 - **One multiple choice question is asked 30 times.** It has four options, and A is correct.
 - **Each answer is four probabilities, one per option.** For example "A 60%, B 30%, C 8%, D 2%". We call each of these a sample.
 - **The [Hot Mess paper](https://arxiv.org/abs/2601.23045) splits a model's error into two parts.** Bias is how far the average sample is from the right answer. Variance is how far the samples are from their own average.
-- **Error incoherence is the share of the error that is variance.** It is variance ÷ (bias + variance). The paper labels the bias term "Bias²", but in the KL form it is the KL itself, so nothing is squared. A high score means the model is wrong mostly because it disagrees with itself.
+- **Error incoherence is the share of the error that is variance.** It is variance ÷ (bias + variance). The paper writes the bias term as "Bias²", by analogy with the squared error decomposition. In the KL form it is the KL divergence itself. A high score means the model is wrong mostly because it disagrees with itself.
 - **The paper sums over many questions.** Its error incoherence is total variance ÷ total error across a question set. With one question, as here, that is the same ratio.
 
 These are not real results from a model. The distributions were picked specifically to hold error incoherence steady while altering Cohesion.
@@ -27,7 +27,7 @@ Each panel is one set of 30 samples, with one row per sample. The colours show h
 - **The three Hot Mess numbers are the same in every row.** We built the samples that way, see [how the toy is built](#how-the-toy-is-built).
 - **The behaviour is not the same.** On the left, no two samples agree. On the right, every sample is one of two answers, "mostly A" (about 89%) or "mostly B" (about 85%).
 - **Cohesion rises as the samples form fewer and clearer camps.** It reads 0.03, then 0.35, then 0.83.
-- **Two camps is not a mess.** It looks like two steady behaviours that the model switches between. That is a different problem from answers with no pattern at all.
+- **Two camps looks less like a mess.** It looks like two steady behaviours that the model switches between. That is a different problem from answers with no pattern at all.
 
 ## The two extra measures
 
