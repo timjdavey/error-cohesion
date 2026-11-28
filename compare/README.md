@@ -4,7 +4,7 @@ How Incoherence differs from the Hot Mess paper's error incoherence, shown on to
 
 - **They share a name and an input, but not a job.** Both read one question asked many times. Error incoherence asks what share of a model's error comes from disagreeing with itself. Incoherence asks how much the answers disagree, and has no idea which answer is right.
 - **Neither can stand in for the other.** Incoherence can't see a model that is wrong the same way every time. Error incoherence can't say how much disagreement there is, only its share of the error.
-- **Incoherence is nearest to the variance half of error incoherence.** It has three great features that variance lacks. Small doubts in confident answers stand out. Outliers are much more prominent. It has a fixed scale from 0 to 1. See [great features of Incoherence](#great-features-of-incoherence).
+- **Incoherence is nearest to the variance part of error incoherence.** It reads differently from variance in three ways. Small doubts in confident answers stand out. Outliers are much more prominent. It has a fixed scale from 0 to 1. See [where Incoherence reads differently](#where-incoherence-reads-differently).
 
 ## Words used here
 
@@ -84,7 +84,7 @@ The wobble rows start with every sample at 97% on one option, then nudge each sa
 - **The same wobble is half the error or none of it.** The two wobble rows are the same samples with A and B swapped. Incoherence reads 0.32 for both. Error incoherence reads 0.53 when the model is right and 0.01 when it is wrong, because bias grew from 0.03 to 4.60.
 - **Two camps score high on both.** Whether disagreement falls into camps is a third question, which [Cohesion](../toy/README.md) answers.
 
-## Great features of the Hot Mess measures
+## What the Hot Mess measures do well
 
 - **They see bias.** Incoherence reads 0 for a model that is always wrong, as the [first table](#same-samples-two-readings) shows.
 - **Error incoherence gives a share.** It says whether inconsistency is most of what a model gets wrong or a sliver of it. Incoherence has no error to take a share of.
@@ -104,7 +104,7 @@ The table below shows that last feature at work. One sample favours B and the re
 - **With confident samples, Incoherence falls faster than the root of Brier variance.** At 1,000 samples it reads 0.009 against 0.050. The pool's entropy is 0.248 there, barely above the 0.242 of each sample.
 - **With certain samples, it keeps up.** It reads 0.076 against 0.052. Certain samples have no entropy of their own, so all of the pool's entropy counts as disagreement.
 
-## Great features of Incoherence
+## Where Incoherence reads differently
 
 Error incoherence is built from bias and variance, and only bias uses the right answer. So the fair thing to compare Incoherence with is the variance, in both its forms.
 
@@ -122,10 +122,10 @@ Two samples over two options, 8 percentage points apart in both rows.
 | Nearly even, 54% on A and 46% on A | 0.995 and 0.995 | 1.000 | 0.005 | 0.003 | 0.0064 |
 
 - **Incoherence reads the nearly certain pair about 60 times higher.** The left chart shows why. Entropy is steep near 100% and flat near 50%. The same 8 points move it from 0.14 to 0.47 in the first pair and not at all in the second.
-- **Brier variance can't tell the rows apart.** The wobble is the same size, so it reads 0.0064 for both.
+- **Brier variance reads both rows the same.** The wobble is the same size, so as a squared distance it reads 0.0064 for both.
 - **KL variance sees the difference too, but less.** It reads the nearly certain pair about 5 times higher, 0.016 against 0.003.
 - **The scaling adds a little more.** Incoherence divides by the pool's entropy, which is 0.327 for the first pair and 1.000 for the second. On its own that is worth about 1.7 times, √(1 ÷ 0.327).
-- **This is by design.** A wobble in a system that looks settled is the surprise worth flagging. The cost is that Incoherence does not count the favoured option changing in the second pair, as [great features of the Hot Mess measures](#great-features-of-the-hot-mess-measures) shows above.
+- **This is by design.** A wobble in a system that looks settled is the surprise worth flagging. The cost is that Incoherence does not count the favoured option changing in the second pair, as [what the Hot Mess measures do well](#what-the-hot-mess-measures-do-well) shows above.
 
 ### Outliers are much more prominent
 
@@ -141,7 +141,7 @@ One sample is even over four options, and so is an outlier. The rest are certain
 | 10,000 | 0.001 | 0.400 | 0.0001 | 0.010 |
 
 - **Incoherence falls from 0.67 to 0.40.** One outlier in 10,000 still reads clearly.
-- **Brier variance falls tenfold each time the samples grow tenfold.** By 10,000 samples the outlier has vanished. The square root does not save it, since that falls to 0.010.
+- **Brier variance falls tenfold each time the samples grow tenfold.** By 10,000 samples the outlier is barely visible. The square root falls too, to 0.010.
 - **The scaling is why.** Brier variance is scaled by a fixed largest value. Incoherence is scaled by the pool's entropy, which falls nearly as fast as the outlier's share. A set this settled has almost no spread, so one outlier is most of it.
 - **It does still fall, slowly.** It reads 0.338 at a million samples.
 
@@ -157,7 +157,7 @@ Every sample here is certain, which is what you get when you record only the ans
 | 4 options, two samples on two of them | 0.707 | 0.500 | 6.2 | 13.1 |
 | 4 options, three samples on A and one on B | 0.637 | 0.375 | 3.5 | 6.9 |
 
-- **KL variance is set by the small number, not the samples.** It about doubles when the number changes from a millionth to a trillionth, and it has no upper limit.
+- **KL variance is set by the small number, not the samples.** It about doubles when the number changes from a millionth to a trillionth, and it has no upper limit. This is true of KL on any certain samples, not something special to the paper, and the paper's smoothing keeps it finite.
 - **Incoherence reads 1 at any number of options.** Brier variance reads 0.500, 0.750 and 0.984 for the same three sets, and needs our scaling to read 1.
 - **Unused options lower Incoherence.** Two certain samples that use two of four options score 0.707, not 1.
 

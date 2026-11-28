@@ -91,7 +91,7 @@ def figure(questions):
         x=0.035, ha="left", color=INK, fontsize=15, fontweight="bold",
     )  # fmt: skip
     fig.text(
-        0.035, 0.925, "Claude Sonnet 4 with a 1k thinking budget, from the Hot Mess paper's own runs",
+        0.035, 0.925, "Claude Sonnet 4 with a 1k thinking budget, from the Hot Mess paper's public runs",
         color=MUTED, fontsize=11,
     )  # fmt: skip
     fig.subplots_adjust(left=0.05, right=0.98, top=0.76, bottom=0.14, wspace=0.1)

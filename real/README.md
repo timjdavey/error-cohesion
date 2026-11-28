@@ -1,8 +1,8 @@
 # The real data
 
-Cohesion on the Hot Mess paper's own GPQA runs, to see if [the toy](../toy/README.md) shows up in real models.
+Cohesion on the Hot Mess paper's public GPQA runs, to see if [the toy](../toy/README.md) shows up in real models.
 
-- **It does.** Real questions with the same error incoherence have very different Cohesion. Some split into a few clear camps and others are spread out.
+- **In this pilot, it seems to.** Real questions with the same error incoherence can have very different Cohesion. Some split into a few clear camps and others are spread out.
 - **This is a pilot.** It covers one model at one setting, Claude Sonnet 4 with a 1k thinking budget. It shows there is something to look into, not what drives it.
 
 ## Three questions with the same score
@@ -13,7 +13,7 @@ These are three real questions from Sonnet 4 at 1k. Each has an error incoherenc
 
 - **On the left, Cohesion is 0.19.** The runs split across all four options, and most of them hedge.
 - **In the middle, Cohesion is 0.76.** Nearly every run picks A or B and is sure of it.
-- **On the right, Cohesion is 0.95.** Every run is 100% sure, with 14 on A and 26 on D. This is the toy's two camps, found in the wild.
+- **On the right, Cohesion is 0.95.** Every run is 100% sure, with 14 on A and 26 on D. This looks like the toy's two camps.
 
 ## It isn't just three questions
 
@@ -27,8 +27,23 @@ In 337 of the 448 questions, the runs disagree. We group those questions by erro
 | 0.6 to 0.8 | 21 | 0.25 to 0.91 |
 | 0.8 to 1.0 | 209 | 0.54 to 0.97 |
 
-- **Every group spans a wide range of Cohesion.** The narrowest still runs from 0.54 to 0.97. Knowing a question's error incoherence tells you little about whether its errors form camps.
-- **So error incoherence alone can't tell a hot mess from a few steady wrong answers.** That is the toy's point, and the real runs show it too.
+- **Every group spans a wide range of Cohesion.** The narrowest still runs from 0.54 to 0.97.
+- **The two measures pick up different things.** Error incoherence gives the share of error that is variance, and Cohesion asks whether that variance falls into camps. So Cohesion may be a useful second number next to error incoherence, as the toy suggests.
+- **Reading error incoherence per question is our choice, not the paper's.** The paper pools it over a question set. Per question, it piles up near 1.0, see [open questions](#open-questions).
+
+## Checking against the paper
+
+Pooled the paper's way, our numbers give the same error incoherence as the paper's own code. The paper's figure for this config shows a slightly lower number, because it pools over half questions.
+
+| How the runs are pooled | Where in the paper | Error incoherence |
+|---|---|---|
+| All 40 runs of each question, summed over the 448 questions | Eq. 2 | 0.45 |
+| Each question's runs split in two at their median reasoning length, then summed over the 896 halves | Fig. 7(a), first Sonnet 4 point | 0.42 |
+
+- **Our CSV gives 0.45.** That is total variance ÷ total error over the 448 questions, 3.25 ÷ (3.98 + 3.25). The paper's text and tables give no pooled number for this config, so this is the figure to check.
+- **The paper's own code agrees.** Its loader and `process_question_metrics` from [haeggee/hot-mess-of-ai](https://github.com/haeggee/hot-mess-of-ai) give 0.4496 on the same runs, as we do. They also find the 7 unparsed answers listed for Sonnet 4 at 1k in the paper's Table 1.
+- **Fig. 7(a) plots 0.42 for this config.** That figure works out bias and variance on each half of about 20 runs, the shorter and the longer, then pools the halves. The paper's `analyze_action_complexity` gives 0.422 at 1,207 tokens, which is where the point sits.
+- **The 0.45 point in Fig. 7(a) is a different config.** It is a Sonnet 4 square, so a medium budget of 4k or 8k, not our 1k.
 
 ## The data
 
@@ -45,7 +60,7 @@ You need [uv](https://docs.astral.sh/uv/). The first run downloads about 550 MB 
 
 | What | Command |
 |---|---|
-| Print the table above | `uv run real/main.py` |
+| Print the pooled error incoherence and the table above | `uv run real/main.py` |
 | Redraw the figure to `real/figure.png` | `uv run real/plot.py` |
 | Run another config from the dataset | `uv run real/main.py --config o4-mini-gpqa-prob-fewshot-cot-high-2` |
 
@@ -58,5 +73,5 @@ These are worth a look next. We haven't tested any of them.
 - **How much does certainty drive Cohesion?** When every run puts 100% on one option, Cohesion reads about 0.95 whatever the split, as [the toy](../toy/README.md#limitations) notes. Some of the spread above may come from that.
 - **Does it hold for other models and settings?** This is one model, one thinking budget and one benchmark.
 - **Does Cohesion change with longer reasoning?** The paper's main claim is about how incoherence grows with reasoning length. The same question applies to Cohesion.
-- **Per-question error incoherence piles up near 1.0.** When most runs are right and sure, the geometric mean puts almost all its weight on the right answer, so bias is near zero and any disagreement scores near 1. The paper pools over questions, so its own numbers don't have this problem.
+- **Per-question error incoherence piles up near 1.0.** When most runs are right and sure, the geometric mean puts almost all its weight on the right answer, so bias is near zero and any disagreement scores near 1. The paper pools over questions, so its numbers don't have this problem.
 - **Cohesion still ignores the right answer.** As in the toy, two camps of wrong answers can score the same as one right camp and one wrong camp.
