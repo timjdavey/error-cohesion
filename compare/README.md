@@ -4,7 +4,7 @@ How Incoherence differs from the Hot Mess paper's error incoherence, shown on to
 
 - **They share a name and an input, but not a job.** Both read one question asked many times. Error incoherence asks what share of a model's error comes from disagreeing with itself. Incoherence asks how much the answers disagree, and has no idea which answer is right.
 - **Neither can stand in for the other.** Incoherence can't see a model that is wrong the same way every time. Error incoherence can't say how much disagreement there is, only its share of the error.
-- **Incoherence is nearest to the variance half of error incoherence.** It reads differently from variance in three ways. Small doubts in confident answers stand out. Outliers are much more prominent. It has a fixed scale from 0 to 1. See [where Incoherence reads differently](#where-incoherence-reads-differently).
+- **Incoherence is nearest to the variance part of error incoherence.** It reads differently from variance in three ways. Small doubts in confident answers stand out. Outliers are much more prominent. It has a fixed scale from 0 to 1. See [where Incoherence reads differently](#where-incoherence-reads-differently).
 
 ## Words used here
 

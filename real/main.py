@@ -63,6 +63,8 @@ def run(config):
 def report(rows):
     """Print how widely Cohesion spreads among questions with similar error incoherence."""
     c = {k: np.array([r[k] for r in rows], float) for k in FIELDS}
+    pooled = c["variance"].sum() / (c["bias"].sum() + c["variance"].sum())
+    print(f"pooled error incoherence, the paper's Eq. 2: {pooled:.2f}\n")
     varies = c["variance"] > VARIES
     print(f"{int(varies.sum())} of {len(rows)} questions have samples that disagree\n")
     print(f"{'error incoherence':18} {'questions':>9}  {'cohesion p10':>12} {'p50':>5} {'p90':>5}")
